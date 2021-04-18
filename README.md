@@ -1,0 +1,2 @@
+# djangotinymce
+Custom TextEditor
