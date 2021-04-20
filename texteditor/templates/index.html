@@ -5,6 +5,178 @@
     <meta charset="UTF-8">
     <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
     <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
+
+     <!-- STYLESHEETS -->
+
+
+        <link href="/static/grappelli/jquery/ui/jquery-ui.min.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href="/static/grappelli/stylesheets/screen.css" rel="stylesheet" type="text/css" media="all" />
+
+            <link href="/static/grappelli/stylesheets/mueller/grid/output.css" rel="stylesheet" type="text/css" media="screen" />
+
+
+
+    <!-- EXTRASTYLES -->
+
+    <!-- JAVASCRIPTS -->
+
+
+        <script type="text/javascript">window.__admin_media_prefix__ = "/static/grappelli/";</script>
+        <script type="text/javascript">window.__admin_utc_offset__ = "0";</script>
+        <script type="text/javascript" charset="utf-8">
+            // GLOBALS
+            var grappelli = {},
+                ADMIN_URL = "/admin/",
+                MODEL_URL_ARRAY = {"1": {"pk": 1, "app": "admin", "model": "logentry"}, "2": {"pk": 2, "app": "auth", "model": "permission"}, "3": {"pk": 3, "app": "auth", "model": "group"}, "4": {"pk": 4, "app": "auth", "model": "user"}, "5": {"pk": 5, "app": "contenttypes", "model": "contenttype"}, "6": {"pk": 6, "app": "sessions", "model": "session"}, "7": {"pk": 7, "app": "texteditor", "model": "post"}},
+                DATE_FORMAT = "%Y-%m-%d",
+                TIME_FORMAT = "%H:%M:%S",
+                DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S";
+        </script>
+        <!-- jQuery, jQuery-UI -->
+        <script src="/static/grappelli/jquery/jquery.min.js" type="text/javascript"></script>
+        <script src="/static/grappelli/jquery/jquery-migrate-3.0.1.min.js" type="text/javascript"></script>
+        <script src="/static/grappelli/jquery/ui/jquery-ui.min.js" type="text/javascript"></script>
+
+            <!-- Grappelli Minified -->
+            <script src="/static/grappelli/js/grappelli.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript" charset="utf-8">
+            (function($) {
+                $(document).ready(function() {
+                    $("#grp-navigation .grp-collapse").grp_collapsible();
+                });
+            })(grp.jQuery);
+        </script>
+
+
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+    <script type="text/javascript" charset="utf-8">
+        (function($) {
+            $(document).ready(function() {
+                grappelli.initDateAndTimePicker();
+                $("#grp-content-container .grp-group").grp_collapsible_group();
+                $("#grp-content-container .grp-collapse").grp_collapsible({
+                    on_init: function(elem, options) {
+                        // open collapse (and all collapse parents) in case of errors
+                        if (elem.find("ul.errorlist").length > 0) {
+                            elem.removeClass("grp-closed")
+                                .addClass("grp-open");
+                            elem.parents(".grp-collapse")
+                                .removeClass("grp-closed")
+                                .addClass("grp-open");
+                        }
+                    }
+                });
+                var related_lookup_fields_fk = [];
+                var related_lookup_fields_m2m = [];
+                var related_lookup_fields_generic = [];
+                var autocomplete_fields_fk = [];
+                var autocomplete_fields_m2m = [];
+                var autocomplete_fields_generic = [];
+                $.each(related_lookup_fields_fk, function() {
+                    $("#id_" + this).grp_related_fk({lookup_url:"/grappelli/lookup/related/"});
+                });
+                $.each(related_lookup_fields_m2m, function() {
+                    $("#id_" + this).grp_related_m2m({lookup_url:"/grappelli/lookup/m2m/"});
+                });
+                $.each(related_lookup_fields_generic, function() {
+                    var content_type = "#id_" + this[0],
+                        object_id = "#id_" + this[1];
+                    $(object_id).grp_related_generic({content_type:content_type, object_id:object_id, lookup_url:"/grappelli/lookup/related/"});
+                });
+                $.each(autocomplete_fields_fk, function() {
+                    $("#id_" + this).grp_autocomplete_fk({
+                        lookup_url:"/grappelli/lookup/related/",
+                        autocomplete_lookup_url:"/grappelli/lookup/autocomplete/"
+                    });
+                });
+                $.each(autocomplete_fields_m2m, function() {
+                    $("#id_" + this).grp_autocomplete_m2m({
+                        lookup_url:"/grappelli/lookup/m2m/",
+                        autocomplete_lookup_url:"/grappelli/lookup/autocomplete/"
+                    });
+                });
+                $.each(autocomplete_fields_generic, function() {
+                    var content_type = "#id_" + this[0],
+                        object_id = "#id_" + this[1];
+                    $(object_id).grp_autocomplete_generic({
+                        content_type:content_type,
+                        object_id:object_id,
+                        lookup_url:"/grappelli/lookup/related/",
+                        autocomplete_lookup_url:"/grappelli/lookup/autocomplete/"
+                    });
+                });
+                $("a#grp-open-all").on("click", function(){
+                    $("#grp-content .grp-collapse-handler").each(function() {
+                        $(this).parent(".grp-collapse").removeClass("grp-closed").addClass("grp-open");
+                    });
+                });
+                $("a#grp-close-all").on("click", function(){
+                    $("#grp-content .grp-collapse-handler").each(function() {
+                        $(this).parent(".grp-collapse").removeClass("grp-open").addClass("grp-closed");
+                    });
+                });
+                // HACK: get rid of currently/change with URL–fields. F**K!!!
+
+                $('p.url').each(function() {
+                    $(this).find("a").remove();
+                    var text = $(this).html();
+                    text = text.replace(/^\w*: /, "");
+                    text = text.replace(/<br>.*: /, "");
+                    $(this).html(text);
+                });
+
+                // HACK: rearrange inlines
+
+                $('div.grp-group').each(function() {
+                    var placeholder = $("fieldset.placeholder."+$(this).attr("id"));
+                    if (placeholder.length) {
+                        $(placeholder).replaceWith($(this));
+                    }
+                });
+
+                // HACK: remove input types
+
+                var clean_input_types = "True";
+                if (clean_input_types == "True") {
+                    grappelli.cleanInputTypes();
+                };
+
+            });
+        })(grp.jQuery);
+    </script>
+    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script src="/static/tinymce/tinymce.min.js"></script>
+<script src="/static/filebrowser/js/AddFileBrowser.js"></script>
+<script src="/static/admin/js/jquery.init.js"></script>
+<script src="/tinymce/filebrowser/"></script>
+<script src="/static/admin/js/core.js"></script>
+<script src="/static/django_tinymce/init_tinymce.js"></script>
+<script src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script src="/static/admin/js/actions.js"></script>
+<script src="/static/admin/js/urlify.js"></script>
+<script src="/static/admin/js/prepopulate.js"></script>
+<script src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+
+    <!-- EXTRAHEAD -->
+
+
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                $('.add-another').on("click", function(e) {
+                    e.preventDefault();
+                    showAddAnotherPopup(this);
+                });
+                $('.related-lookup').on("click", function(e) {
+                    e.preventDefault();
+                    showRelatedObjectLookupPopup(this);
+                });
+
+            });
+        })(grp.jQuery);
+    </script>
+
     <title>Index</title>
 </head>
 <body>
