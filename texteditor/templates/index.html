@@ -3,8 +3,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
-    <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
 
      <!-- STYLESHEETS -->
 
@@ -191,7 +189,7 @@ tinymce.init({
 
     var toTimeHtml = function (date) {
       //return '<h1 class="test">Tsets</h1>';
-      return '<video controls="controls" width="300" height="150"><source src="https://google.com/yy.mp4" /></video>';
+      return '<video id="video1" controls="controls" width="300" height="150"><source src="https://google.com/yy.mp4" /></video>';
     };
 
     editor.ui.registry.addButton('fileUploader', {
@@ -200,6 +198,7 @@ tinymce.init({
       disabled: true,
       onAction: function (_) {
         editor.insertContent(toTimeHtml(new Date()));
+        javascript:FileBrowser.show('video1', '/admin/filebrowser/browse/?pop=1&amp;dir=images/');
       },
       onSetup: function (buttonApi) {
         var editorEventCallback = function (eventApi) {
