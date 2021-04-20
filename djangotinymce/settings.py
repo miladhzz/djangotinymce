@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'texteditor',
-    'django_summernote',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -120,16 +120,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-MEDIA_URL = '/media/'
-import os
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-
-SUMMERNOTE_CONFIG = {
-
-    'iframe': True,
-
-}
