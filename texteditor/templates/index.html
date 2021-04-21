@@ -144,12 +144,10 @@
         })(grp.jQuery);
     </script>
     <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
-<script src="/static/tinymce/tinymce.min.js"></script>
 <script src="/static/filebrowser/js/AddFileBrowser.js"></script>
 <script src="/static/admin/js/jquery.init.js"></script>
 <script src="/tinymce/filebrowser/"></script>
 <script src="/static/admin/js/core.js"></script>
-<script src="/static/django_tinymce/init_tinymce.js"></script>
 <script src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
 <script src="/static/admin/js/actions.js"></script>
 <script src="/static/admin/js/urlify.js"></script>
@@ -179,6 +177,23 @@
 
 
     <script>
+function FileBrowserPopup(callback, value, type) {
+    var fbURL = '/admin/filebrowser/browse/?pop=5';
+    fbURL = fbURL + "&type=" + type.filetype;
+    if(value)
+        fbURL += '&input=';
+    const instanceApi = tinyMCE.activeEditor.windowManager.openUrl({
+        title: 'Filebrowser image/media/file picker',
+        url: fbURL,
+        width: 850,
+        height: 500,
+        onMessage: function(dialogApi, details) {
+            callback(details.content);
+            instanceApi.close();
+        }
+    });
+    return false;
+}
 
 tinymce.init({
   selector: 'textarea#id_content',
@@ -187,6 +202,7 @@ tinymce.init({
   plugins: 'paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap hr toc insertdatetime advlist lists wordcount imagetools textpattern noneditable charmap quickbars emoticons',
   image_caption: true,
   image_advtab: true,
+  file_picker_callback: FileBrowserPopup,
   setup: function (editor) {
 
     var toTimeHtml = function (date) {

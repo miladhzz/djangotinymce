@@ -8,7 +8,4 @@ class Post(models.Model):
     content = HTMLField()
     image = FileBrowseField("Image", max_length=200, directory="images/", extensions=[".jpg"], blank=True)
 
-    class Media:
-        js = ['/path/to/tinymce/jscripts/tiny_mce/tiny_mce.js',
-              '/path/to/your/tinymce_setup.js']
 
