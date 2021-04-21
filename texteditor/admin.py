@@ -5,7 +5,9 @@ from . import models
 class PostAdmin(admin.ModelAdmin):
     class Media:
         js = [
-            '/static/filebrowser/js/tinymce_setup.js',
+            '/static/tinymce/tinymce.min.js',
+            '/static/django_tinymce/init_tinymce.js',
+            '/static/tinymce_setup.js',
         ]
 
 
