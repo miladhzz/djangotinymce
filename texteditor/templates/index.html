@@ -198,39 +198,11 @@ function FileBrowserPopup(callback, value, type) {
 tinymce.init({
   selector: 'textarea#id_content',
   menubar: 'view',
-  toolbar: 'undo redo | bold italic underline strikethrough | fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | charmap emoticons | fullscreen | insertfile image media fileUploader link codesample | a11ycheck ltr rtl ',
+  toolbar: 'undo redo | bold italic underline strikethrough | fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | charmap emoticons | fullscreen | insertfile image media link codesample | a11ycheck ltr rtl ',
   plugins: 'paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap hr toc insertdatetime advlist lists wordcount imagetools textpattern noneditable charmap quickbars emoticons',
   image_caption: true,
   image_advtab: true,
   file_picker_callback: FileBrowserPopup,
-  setup: function (editor) {
-
-    var toTimeHtml = function (date) {
-      //return '<h1 class="test">Tsets</h1>';
-      return '<video id="video1" controls="controls" width="300" height="150"><source src="https://google.com/yy.mp4" /></video>';
-    };
-
-    editor.ui.registry.addButton('fileUploader', {
-      icon: 'gallery',
-      tooltip: 'Insert Current Date',
-      disabled: true,
-      onAction: function (_) {
-        editor.insertContent(toTimeHtml(new Date()));
-        javascript:FileBrowser.show('video1', '/admin/filebrowser/browse/?pop=1&amp;dir=images/');
-      },
-      onSetup: function (buttonApi) {
-        var editorEventCallback = function (eventApi) {
-          buttonApi.setDisabled(eventApi.element.nodeName.toLowerCase() === 'time');
-        };
-        editor.on('NodeChange', editorEventCallback);
-
-        /* onSetup should always return the unbind handlers */
-        return function (buttonApi) {
-          editor.off('NodeChange', editorEventCallback);
-        };
-      }
-    });
-  },
   content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
 });
 
